@@ -1,18 +1,26 @@
-#!/usr/bin/php
-
 <?php
 
 //
 
-include "/var/www/relayo.com/includes/config2.php";
+namespace nickrod\simplefeed;
 
 //
 
-$query = "SELECT id, title, description, postalcode, country, company, salary, education, jobtype, experience, cdate, cats.name AS category FROM gigs LEFT JOIN (SELECT gig_id, GROUP_CONCAT(TRIM(name) SEPARATOR 0x1D) AS name FROM gig_tags, categories WHERE gig_tags.cat_id = categories.id GROUP BY gig_id) cats ON gigs.id = cats.gig_id WHERE status = 1 AND status_user = 1 AND cdate >= (CURRENT_DATE() - INTERVAL 60 DAY) ORDER BY title";
+class SimpleFeed
+{
+  // dom tree
 
-// vars
+  private $dom_tree;
 
-$savefile = "/var/www/relayo.com/xml/jobs";
+  // constructor
+
+  public function __construct($options = [])
+  {
+    $this->dom_tree = new DOMDocument('1.0', 'UTF-8');
+    $this->dom_tree->formatOutput = true;
+    $this->dom_tree->preserveWhiteSpace = false;
+  }
+}
 
 // create dom
 
@@ -198,5 +206,3 @@ function catSep($str)
 
   return str_replace(chr(29), ',', $str);
 }
-
-?>
